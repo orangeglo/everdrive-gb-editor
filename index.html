@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>EverDrive GB Theme Editor</title>
+
+    <!-- <link rel="shortcut icon" type="image/png" href="img/favicon.png"/> -->
+    <meta name="description" content="EverDrive GB Theme Editor is a tool to create custom themes for Krikzz's Game Boy Advance flashcart.">
+    <meta property="og:description" content="EverDrive GB Theme Editor is a tool to create and share custom themes for Krikzz's Game Boy X3, X5, and X7 flashcarts." />
+    <!-- <meta property="og:image" content="https://orangeglo.github.io/gbnp/img/gbnp.png" /> -->
+    <meta property="og:url" content="https://orangeglo.github.io/everdrive-gb-editor/" />
+    <meta property="og:site_name" content="EverDrive GB Theme Editor" />
+    <meta property="og:type" content="website" />
+
+    <script src="script/vue.min.js"></script>
+    <script id="devload" src="script/devload.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/style.css" />
+  </head>
+
+  <body>
+    <span class='font-loader'>.</span>
+    <noscript>
+      Looks like you have JS disabled. This tool needs javascript to function!
+    </noscript>
+
+    <div class='heading'>
+      <h1><span class='outline'>EverDrive GB</span> Theme Editor</h1>
+      <p>Create a custom color theme for your EverDrive GB X3, X5, and X7 flashcarts!</p>
+    </div>
+
+    <div id="app">
+      <div class='row'>
+        <div class='theme-controls'>
+          <h3> Edit Palette Entries </h3>
+          <div class='palettes'>
+            <palette-entry
+              v-for="palette in palettes"
+              :palette="palette"
+              @color-changed="colorChanged($event.value, $event.id)"
+            ></palette-entry>
+          </div>
+
+          <div class='form-controls'>
+            <button @click="reset">Reset to Default</button>
+          </div>
+
+          <h3> Download, Patch, & Share </h3>
+          <a
+            :href='patchData'
+            class='download-link'
+            type="application/octet-stream"
+            download="everdrive_gb_v1.04_theme_patch.ips"
+            :class="{ disabled: !downloadEnabled }"
+          >
+            >>> Download IPS Patch <<<
+          </a>
+          <p class='short-text'>
+            Apply the patch to the <span class='bold'>GBCSYS/GBCOS.BIN</span> file on your EverDrive. This patch will only work with the latest firmware version, <span class='bold'>v1.04!</span>
+          </p>
+          <p class='short-text'>
+            You can download the latest firmware from <a href="http://krikzz.com/pub/support/everdrive-gb/x-series/OS/">Krikzz's website</a>. I recommend using <a href="https://www.romhacking.net/patch/">ROMhacking.net's online patching tool</a> if you don't have a preferred patching method.
+          </p>
+          <p class='short-text'>
+            Share your theme by sharing the current URL! Your theme is encoded into the query parameters.
+          </p>
+        </div>
+        <div class='live-preview'>
+          <live-preview :palettes="palettes" :fonts-loaded='fontsLoaded'></live-preview>
+          <live-preview :palettes="palettes" :show-menu='true' :fonts-loaded='fontsLoaded'></live-preview>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <a href="https://github.com/orangeglo/everdrive-gb-editor">view this project on github</a>
+      -
+      by orangeglo (orangeglo#6197 on Discord)
+    </footer>
+
+    <script src="script/app.js"></script>
+  </body>
+</html>

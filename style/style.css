@@ -1,0 +1,196 @@
+@font-face {
+  font-family: "ibm";
+  src: url("../font/ibm.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-loader {
+  font-family: 'ibm';
+  font-size: 1px;
+  opacity: 0;
+  position: absolute;
+}
+
+html {
+  font-family: sans-serif;
+}
+
+button {
+  height: 1.5rem;
+}
+
+.heading {
+  margin-bottom: 2rem;
+  margin-left: 1rem;
+}
+
+.heading h1 {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.outline {
+  color: white;
+  text-shadow: -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+}
+
+.heading p {
+  margin-top: 0;
+  margin-left: 0.2rem;
+}
+
+.color-input {
+  height: 16px;
+  width: 4rem;
+  margin-right: 1rem;
+  text-transform: uppercase;
+}
+
+.color-input:disabled {
+  color: black;
+}
+
+footer {
+  margin-top: 40px;
+  font-size: 0.75em;
+  color: #444;
+}
+
+a {
+  color: #000079;
+}
+
+input[type="color"] {
+  height: 22px;
+  width: 3rem;
+  padding: 0;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+input[type="color"]:hover {
+  cursor: pointer;
+}
+
+input[type="color"]:disabled {
+  cursor: not-allowed;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0; 
+}
+
+.row {
+  display: flex;
+}
+
+.row > * {
+  margin: 1rem;
+}
+
+.live-preview {
+  margin-left: 3rem;
+}
+
+.live-preview canvas {
+  display: block;
+  margin-bottom: 1rem;
+  width: 288px;
+}
+
+.theme-controls > h3:first-child {
+  margin-top: 0;
+}
+
+.form-controls {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.palette {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.palette label {
+  font-style: italic;
+  margin-right: 2rem;
+}
+
+.palette .disabled, .free-slot-controls.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.palette .controls {
+  display: flex;
+  align-items: center;
+}
+
+a.download-link{
+  color: blue;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: grey;
+}
+
+input {
+  border-radius: 0;
+  border: 1px solid lightgrey;
+  padding: 2px;
+}
+
+select {
+  margin-right: 1rem;
+}
+
+input:invalid {
+  border-color: red;
+}
+
+input:focus {
+  border-color: lightgrey;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.short-text {
+  max-width: 450px;
+  font-size: 0.87rem;
+}
+
+h3 {
+  padding-top: 2px;
+  color: #444;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  font-size: 1.25em;
+}
+
+code {
+  background-color: #e8e8e8;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+.free-slot-controls {
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.palettes .palette:last-child {
+  margin-bottom: 0;
+}
+
