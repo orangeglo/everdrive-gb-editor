@@ -1,11 +1,5 @@
 /*
-0x1F77
-
-Background / Highlight Menu Entry BG - Black 0000
-ROM Entry / Highlighted Menu Entry - Green
-Border BG, Highlighted ROM BG, Menu BG - Grey
-Highlighted ROM Entry / Border Text - White FF7F
-
+  EverDrive GB Theme Editor
 */
 
 const DEFAULT_PALETTES = [
@@ -214,8 +208,11 @@ const app = new Vue({
       const palettesJson = localStorage.getItem('gb_palettes');
       if (palettesJson) { this.palettes = JSON.parse(palettesJson); }
     },
-    reset: function() {
-      const sure = window.confirm('Are you sure you want to reset to the default colors?');
+    reset: function(confirm = true) {
+      let sure = true;
+      if (confirm) {
+        sure = window.confirm('Are you sure you want to reset to the default colors?');
+      }
       if (sure) {
         this.palettes = deepClone(DEFAULT_PALETTES);
         this.buildPatch();
@@ -240,6 +237,86 @@ const app = new Vue({
       } else {
         history.replaceState({}, '', location.href.split('?')[0]);
       }
+    },
+    triggerIpsFileLabel: function() { this.$refs.ipsFileLabel.click(); },
+    uploadIPS: async function(e) {
+      const fileReader = new FileReader()
+      fileReader.onload = () => {
+        this.parseIPS(fileReader.result);
+      }
+      fileReader.readAsArrayBuffer(e.target.files[0]);
+      e.target.value = '';
+    },
+    parseIPS: async function(ipsArrayBuffer) {
+      const buffer = new Uint8Array(ipsArrayBuffer).slice(5, ipsArrayBuffer.byteLength - 3);
+      const data = [];
+
+      let state = 'offset';
+      let index = 0;
+      let temp = {};
+      while (index < buffer.length) {
+        if (state === 'offset') {
+          const o = buffer.slice(index, index + 3);
+          const offsetStr = parseInt(`${o[0].toString(16)}${o[1].toString(16)}${o[2].toString(16)}`, 16);
+          temp.offset = offsetStr.toString(16).toUpperCase();
+          index += 4;
+          state = 'length';
+        } else if (state === 'length') {
+          temp.length = buffer[index];
+          index++;
+          state = 'value';
+        } else { // state === 'value'
+          const v = buffer.slice(index, index + temp.length);
+          let stringValue = '';
+          v.forEach(val => stringValue += val.toString(16).padStart(2, '0'));
+          temp.value = parseInt(stringValue, 16);
+          index += temp.length;
+          data.push(temp);
+          temp = {};
+          state = 'offset';
+        }
+      }
+
+      const bgrToHex = bgr => {
+        const bgrStr = bgr.toString(16).padStart(4, '0');
+        let bgrInt = parseInt(bgrStr.slice(2, 4) + bgrStr.slice(0, 2), 16);
+        bgrInt = Math.min(bgrInt, Math.pow(2, 15) - 1); // limit to 15-bit
+
+        const r = (bgrInt & 0b11111) * 8;
+        const g = ((bgrInt >>> 5) & 0b11111) * 8;
+        const b = ((bgrInt >>> 10) & 0b11111) * 8;
+        const rError = Math.floor(r / 32);
+        const gError = Math.floor(g / 32);
+        const bError = Math.floor(b / 32);
+
+        return '#' + (
+          (r + rError).toString(16).padStart(2, '0') +
+          (g + gError).toString(16).padStart(2, '0') +
+          (b + bError).toString(16).padStart(2, '0')
+        ).toUpperCase();
+      }
+
+      const valToState = {};
+      const valueFunctionFor = (id) => {
+        return (val) => {
+          let pal = null;
+          pal = this.palettes.find(p => p.id === id);
+          pal.value = val;
+          pal.hex = bgrToHex(val);
+        };
+      };
+
+      valToState['1F77'] = valueFunctionFor(1);
+      valToState['1F79'] = valueFunctionFor(2);
+      valToState['1F7B'] = valueFunctionFor(3);
+      valToState['1F7D'] = valueFunctionFor(4);
+
+      this.reset(false);
+      data.forEach(d => {
+        const f = valToState[d.offset];
+        if (f) { f(d.value); }
+      });
+      this.buildPatch();
     },
   }
 });

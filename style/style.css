@@ -100,7 +100,7 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 .live-preview canvas {
   display: block;
   margin-bottom: 1rem;
-  width: 288px;
+  width: 280px;
 }
 
 .theme-controls > h3:first-child {
@@ -110,6 +110,8 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 .form-controls {
   margin-top: 1rem;
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .palette {
