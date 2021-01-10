@@ -1,1 +1,1 @@
-# EverDrive GBA Theme Editor
+# EverDrive GB Theme Editor
