@@ -3,9 +3,9 @@
 */
 
 const DEFAULT_PALETTES = [
-  { id: 1, label: 'Background, Selected Menu Entry BG', value: 0x0000, hex: '#000000', valAddr: 0x1F77 },
+  { id: 1, label: 'Background', value: 0x0000, hex: '#000000', valAddr: 0x1F77 },
   { id: 2, label: 'Unselected ROM, Selected Menu Entry', value: 0xE413, hex: '#21FF21', valAddr: 0x1F79 },
-  { id: 3, label: 'Menu, Header/Footer, and Selected ROM BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: 0x1F7B },
+  { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: 0x1F7B },
   { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: 0x1F7D },
 ];
 const IPS_HEADER = [0x50, 0x41, 0x54, 0x43, 0x48];
@@ -19,6 +19,9 @@ Vue.component('live-preview', {
   props: ['palettes', 'show-menu', 'fonts-loaded'],
   computed: {
     backgroundColor: function() { return this.getStandardColor(1); },
+    unselectedROM: function() { return this.getStandardColor(2); },
+    headerFooterMenuBG: function() { return this.getStandardColor(3); },
+    headerFooterSelectedRomText: function() { return this.getStandardColor(4); }
   },
   watch: {
     palettes: {
@@ -39,64 +42,59 @@ Vue.component('live-preview', {
       const canvas = this.$refs.canvas;
 
       const ctx = canvas.getContext('2d');
-      ctx.font = "21px ibm";
+      ctx.font = "24px ibm";
 
+      const m = 4;
       const write = (text, x, y) => {
-        if (this.fontsLoaded) { ctx.fillText(text, x*2, (y+0.5)*2); }
+        if (this.fontsLoaded) { ctx.fillText(text, x*m, (y+0.5)*m); }
       }
 
       ctx.fillStyle = this.backgroundColor;
-      ctx.fillRect(0, 0, 640, 576);
-      // ctx.fillStyle = this.headerFooterMenuBG;
-      // ctx.fillRect(0, 0, 640, 24);
-      // ctx.fillRect(0, (240-24)*2, 720, 48);
+      ctx.fillRect(0, 0, 160 * m, 144 * m);
 
-      // ctx.fillStyle = this.basicText;
-      // write("Basic Text", 2, 10);
+      if (!this.showMenu) {
+        ctx.fillStyle = this.headerFooterMenuBG;
+        ctx.fillRect(0, 0, 160 * m, 8 * m);
+        ctx.fillRect(0, (144-24) * m, 160 * m, 24 * m);
 
-      // if (this.showMenu) {
-      //   ctx.fillStyle = this.folderMenuItem;
-      //   write("Selected Folder", 2, 240-13);
-      // } else {
-      //   write("Selected ROM", 2, 240-14);
-      // }
+        ctx.fillStyle = this.headerFooterSelectedRomText;
+        write("Header Text", 1.5, 6.5);
+        write("Selected ROM", 1.5, 144-24+6.5);
 
-      // for (let i = 0; i < 15; i++) {
-      //   const y = i * 12 + 33;
-      //   if (i === 0) {
-      //     if (this.showMenu) {
-      //       ctx.fillStyle = this.basicText;
-      //       write("Selected Folder", 2, y);
-      //     } else {
-      //       ctx.fillStyle = this.folderMenuItem;
-      //       write("Unselected Folder", 2, y);
-      //     }
-      //   } else if (i === 6 && !this.showMenu) {
-      //     ctx.fillStyle = this.basicText;
-      //     write("Selected ROM", 2, y);
-      //   } else {
-      //     ctx.fillStyle = this.unselectedROM;
-      //     write("Unselected ROM", 2, y);
-      //   }
-      // }
+        for (let i = 0; i < 12; i++) {
+          const y = i * 8 + 22;
+          if (i === 3) {
+            ctx.fillStyle = this.headerFooterMenuBG;
+            ctx.fillRect(0, (y-6)*m, 160*m, 8*m)
+            ctx.fillStyle = this.headerFooterSelectedRomText;
+            write("Selected ROM", 2, y);
+          } else {
+            ctx.fillStyle = this.unselectedROM;
+            write("Unselected ROM", 2, y);
+          }
+        }
+      } else {
+        ctx.fillStyle = this.headerFooterMenuBG;
+        ctx.fillRect(8*m, 8*m, (160-24)*m, (144-16) * m);
+        ctx.fillStyle = this.headerFooterSelectedRomText;
+        write("Main Menu", 45, 15)
+        write("____________________", 9, 18)
 
-      // if (this.showMenu) {
-      //   ctx.fillStyle = this.headerFooterMenuBG;
-      //   ctx.fillRect(68*2, 23*2, 222*2, 168*2);
-      //   ctx.fillStyle = this.menuHeaderBG;
-      //   ctx.fillRect(68*2, 23*2, 222*2, 12*2);
-      //   ctx.fillStyle = this.menuHeaderText;
-      //   write("Main Menu", 126, 33);
+        ctx.fillStyle = this.backgroundColor;
+        ctx.fillRect(49.5*m, 23.5*m, 48.5*m, 9*m)
+        ctx.fillStyle = this.unselectedROM;
 
-      //   ctx.fillStyle = this.basicText;
-      //   write("Options", 138, 32+12*2);
-      //   ctx.fillStyle = this.folderMenuItem;
-      //   write("Recently Played", 92, 32+12*4);
-      //   write("Start Random Game", 80, 32+12*6);
-      //   write("Device Info", 115, 32+12*8);
-      //   write("Diagnostics", 115, 32+12*10);
-      //   write("About", 151, 32+12*12);
-      // }
+        const ySpacing = 16
+        write("Options", 51, 30);
+
+        ctx.fillStyle = this.headerFooterSelectedRomText;
+        write("Recently Played", 24, 30+ySpacing);
+        write("Random Game", 38, 30+ySpacing*2);
+        write("Cheats", 58, 30+ySpacing*3);
+        write("Device Info", 38, 30+ySpacing*4);
+        write("Diagnostics", 38, 30+ySpacing*5);
+        write("About", 58, 30+ySpacing*6);
+      }
     },
   },
   template: `
