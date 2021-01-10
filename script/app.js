@@ -208,10 +208,10 @@ const app = new Vue({
       this.patchData = URL.createObjectURL(new Blob([bytes]));
     },
     saveToStorage: function() {
-      localStorage.setItem('palettes', JSON.stringify(this.palettes));
+      localStorage.setItem('gb_palettes', JSON.stringify(this.palettes));
     },
     loadFromStorage: function() {
-      const palettesJson = localStorage.getItem('palettes');
+      const palettesJson = localStorage.getItem('gb_palettes');
       if (palettesJson) { this.palettes = JSON.parse(palettesJson); }
     },
     reset: function() {
@@ -235,7 +235,7 @@ const app = new Vue({
       const palettesBase36 = this.palettes.map(p => parseInt(p.hex.slice(1,7),16).toString(36));
       const data = [1, ...palettesBase36].flat();
       const encodedData = btoa(data.join(','));
-      if (encodedData !== 'MSw5emxkciw3ZWl0OSw5ZDB6dSw2Z29ociw1aGY5bywsMCwwLDAsMA==') {
+      if (encodedData !== 'MSwwLDFicjR4LDR0ZzhyLDl6bGRy') {
         history.replaceState({t: encodedData}, '', `?t=${encodedData}`);
       } else {
         history.replaceState({}, '', location.href.split('?')[0]);
