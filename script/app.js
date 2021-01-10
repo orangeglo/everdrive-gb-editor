@@ -75,25 +75,22 @@ Vue.component('live-preview', {
         }
       } else {
         ctx.fillStyle = this.headerFooterMenuBG;
-        ctx.fillRect(8*m, 8*m, (160-24)*m, (144-16) * m);
+        ctx.fillRect(8*m, 32*m, (160-16)*m, (144-64) * m);
         ctx.fillStyle = this.headerFooterSelectedRomText;
-        write("Main Menu", 45, 15)
-        write("____________________", 9, 18)
+        write("Game Menu", 51, 39)
+        write("_____________________", 10, 42)
 
         ctx.fillStyle = this.backgroundColor;
-        ctx.fillRect(49.5*m, 23.5*m, 48.5*m, 9*m)
+        ctx.fillRect(29.5*m, 47.5*m, 108.5*m, 9*m)
         ctx.fillStyle = this.unselectedROM;
 
         const ySpacing = 16
-        write("Options", 51, 30);
+        write("Select And Start", 31, 54);
 
         ctx.fillStyle = this.headerFooterSelectedRomText;
-        write("Recently Played", 24, 30+ySpacing);
-        write("Random Game", 38, 30+ySpacing*2);
-        write("Cheats", 58, 30+ySpacing*3);
-        write("Device Info", 38, 30+ySpacing*4);
-        write("Diagnostics", 38, 30+ySpacing*5);
-        write("About", 58, 30+ySpacing*6);
+        write("Select Only", 44, 54+ySpacing);
+        write("Cheats", 64, 54+ySpacing*2);
+        write("Rom Info", 56, 54+ySpacing*3);
       }
     },
   },
