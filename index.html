@@ -5,8 +5,8 @@
     <title>EverDrive GB Theme Editor</title>
 
     <!-- <link rel="shortcut icon" type="image/png" href="img/favicon.png"/> -->
-    <meta name="description" content="EverDrive GB Theme Editor is a tool to create custom themes for Krikzz's Game Boy Advance flashcart.">
-    <meta property="og:description" content="EverDrive GB Theme Editor is a tool to create and share custom themes for Krikzz's Game Boy X3, X5, and X7 flashcarts." />
+    <meta name="description" content="EverDrive GB Theme Editor is a tool to create custom themes for Krikzz's Game Boy flashcarts.">
+    <meta property="og:description" content="EverDrive GB Theme Editor is a tool to create and share custom themes for Krikzz's Game Boy flashcarts." />
     <!-- <meta property="og:image" content="https://orangeglo.github.io/gbnp/img/gbnp.png" /> -->
     <meta property="og:url" content="https://orangeglo.github.io/everdrive-gb-editor/" />
     <meta property="og:site_name" content="EverDrive GB Theme Editor" />
@@ -25,7 +25,7 @@
 
     <div class='heading'>
       <h1><span class='outline'>EverDrive GB</span> Theme Editor</h1>
-      <p>Create a custom color theme for your EverDrive GB X3, X5, and X7 flashcarts!</p>
+      <p>Create a custom color theme for your EverDrive GB flashcarts!</p>
       <p>Looking for the GBA theme editor? <a href="https://orangeglo.github.io/everdrive-gba-editor/">Click here to switch</a>
     </div>
 
@@ -71,7 +71,7 @@
           </a>
           <p class='short-text'>
             Apply the patch to the
-            <span v-if="model == 'xseries'" class='bold'>GBCOS.BIN</span>
+            <span v-if="model == 'xseries'" class='bold'>GBCSYS/GBCOS.BIN</span>
             <span v-if="model == 'edgb'" class='bold'>GBOS.GB</span>
             file on your EverDrive. This patch will only work with the latest firmware version,
             <span v-if="model == 'xseries'" class='bold'>v1.04!</span>
