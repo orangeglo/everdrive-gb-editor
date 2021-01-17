@@ -5,8 +5,8 @@
     <title>EverDrive GB Theme Editor</title>
 
     <!-- <link rel="shortcut icon" type="image/png" href="img/favicon.png"/> -->
-    <meta name="description" content="EverDrive GB Theme Editor is a tool to create custom themes for Krikzz's Game Boy Advance flashcart.">
-    <meta property="og:description" content="EverDrive GB Theme Editor is a tool to create and share custom themes for Krikzz's Game Boy X3, X5, and X7 flashcarts." />
+    <meta name="description" content="EverDrive GB Theme Editor is a tool to create custom themes for Krikzz's Game Boy flashcarts.">
+    <meta property="og:description" content="EverDrive GB Theme Editor is a tool to create and share custom themes for Krikzz's Game Boy flashcarts." />
     <!-- <meta property="og:image" content="https://orangeglo.github.io/gbnp/img/gbnp.png" /> -->
     <meta property="og:url" content="https://orangeglo.github.io/everdrive-gb-editor/" />
     <meta property="og:site_name" content="EverDrive GB Theme Editor" />
@@ -26,13 +26,21 @@
 
     <div class='heading'>
       <h1><span class='outline'>EverDrive GB</span> Theme Editor</h1>
-      <p>Create a custom color theme for your EverDrive GB X3, X5, and X7 flashcarts!</p>
+      <p>Create a custom color theme for your EverDrive GB flashcarts!</p>
       <p>Looking for the GBA theme editor? <a href="https://orangeglo.github.io/everdrive-gba-editor/">Click here to switch</a>
     </div>
 
     <div id="app">
       <div class='row'>
         <div class='theme-controls'>
+          <h3> Select Cart Model </h3>
+          <div class='model-select'>
+            <input type="radio" id="xseries" value="xseries" v-model="model">
+            <label for="xseries">X Series (X3, X5, & X7)</label>
+            <input type="radio" id="edgb" value="edgb" v-model="model">
+            <label for="edgb">Original EverDrive GB</label>
+          </div>
+
           <h3> Edit Palette Entries </h3>
           <div class='palettes'>
             <palette-entry
@@ -57,16 +65,24 @@
             :href='patchData'
             class='download-link'
             type="application/octet-stream"
-            download="everdrive_gb_v04_theme_patch.ips"
+            :download="filename"
             :class="{ disabled: !downloadEnabled }"
           >
             >>> Download IPS Patch <<<
           </a>
           <p class='short-text'>
-            Apply the patch to the <span class='bold'>GBCSYS/GBCOS.BIN</span> file on your EverDrive. This patch will only work with the latest firmware version, <span class='bold'>v1.04!</span>
+            Apply the patch to the
+            <span v-if="model == 'xseries'" class='bold'>GBCSYS/GBCOS.BIN</span>
+            <span v-if="model == 'edgb'" class='bold'>GBOS.GB</span>
+            file on your EverDrive. This patch will only work with the latest firmware version,
+            <span v-if="model == 'xseries'" class='bold'>v1.04!</span>
+            <span v-if="model == 'edgb'" class='bold'>v4!</span>
           </p>
           <p class='short-text'>
-            You can download the latest firmware from <a href="http://krikzz.com/pub/support/everdrive-gb/x-series/OS/">Krikzz's website</a>. I recommend using <a href="https://www.romhacking.net/patch/">ROMhacking.net's online patching tool</a> if you don't have a preferred patching method.
+            You can download the latest firmware from
+            <a v-if="model == 'xseries'" href="http://krikzz.com/pub/support/everdrive-gb/x-series/OS/">Krikzz's website</a>
+            <a v-if="model == 'edgb'" href="http://krikzz.com/pub/support/everdrive-gb/OS/v4/">Krikzz's website</a>
+            . I recommend using <a href="https://www.romhacking.net/patch/">ROMhacking.net's online patching tool</a> if you don't have a preferred patching method.
           </p>
           <p class='short-text'>
             Share your theme by sharing the current URL! Your theme is encoded into the query parameters.

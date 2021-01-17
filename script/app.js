@@ -3,10 +3,10 @@
 */
 
 const DEFAULT_PALETTES = [
-  { id: 1, label: 'Background', value: 0x0000, hex: '#000000', valAddr: 0x1F77 },
-  { id: 2, label: 'Unselected ROM, Selected Menu Entry', value: 0xE413, hex: '#21FF21', valAddr: 0x1F79 },
-  { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: 0x1F7B },
-  { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: 0x1F7D },
+  { id: 1, label: 'Background', value: 0x0000, hex: '#000000', valAddr: 0x1F77, altValAddr: 0x6537 },
+  { id: 2, label: 'Unselected ROM, Selected Menu Entry', value: 0xE413, hex: '#21FF21', valAddr: 0x1F79, altValAddr: 0x6539 },
+  { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: 0x1F7B, altValAddr: 0x653B },
+  { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: 0x1F7D, altValAddr: 0x653D },
 ];
 const IPS_HEADER = [0x50, 0x41, 0x54, 0x43, 0x48];
 const IPS_EOF = [0x45, 0x4F, 0x46];
@@ -137,6 +137,7 @@ const app = new Vue({
     patchData: null,
     buildPatchTimeoutHandle: null,
     fontsLoaded: false,
+    model: 'xseries'
   },
   created() {
     const urlParams = new URLSearchParams(location.search);
@@ -144,15 +145,28 @@ const app = new Vue({
       for (const [key, value] of urlParams) {
         if (key === 't') { this.loadFromUrlTag(value); }
       }
+      this.loadSettingsFromStorage();
     } else {
       this.loadFromStorage();
     }
     this.buildPatch();
   },
+  watch: {
+    model: function() {
+      this.buildPatch();
+    }
+  },
   computed: {
     downloadEnabled: function() {
       return this.palettes.every(p => p.hex.length === 7);
     },
+    filename: function() {
+      if (this.model == 'xseries'){
+        return 'everdrive_gbx_v04_theme_patch.ips';
+      } else {
+        return 'everdrive_gb_v4_theme_patch.ips';
+      }
+    }
   },
   methods: {
     colorChanged: function(value, id) {
@@ -183,9 +197,11 @@ const app = new Vue({
 
       const chunks = [];
       this.palettes.forEach(palette => {
+        const addr = this.model == 'xseries' ? palette.valAddr : palette.altValAddr
+
         chunks.push(0); // 3 byte offset
-        chunks.push(palette.valAddr >>> 8);
-        chunks.push(palette.valAddr & 0xFF);
+        chunks.push(addr >>> 8);
+        chunks.push(addr & 0xFF);
         chunks.push(0); // 2 byte size
         chunks.push(2);
         chunks.push(palette.value >>> 8); // 2 byte value
@@ -198,10 +214,23 @@ const app = new Vue({
     },
     saveToStorage: function() {
       localStorage.setItem('gb_palettes', JSON.stringify(this.palettes));
+      localStorage.setItem('gb_model', this.model);
     },
     loadFromStorage: function() {
       const palettesJson = localStorage.getItem('gb_palettes');
-      if (palettesJson) { this.palettes = JSON.parse(palettesJson); }
+      if (palettesJson) {
+        const palettes = JSON.parse(palettesJson);
+        this.palettes.forEach(palette => {
+          const loadedPalette = palettes.find(p => p.id === palette.id);
+          palette.hex = loadedPalette.hex;
+          palette.value = loadedPalette.value;
+        });
+      }
+      this.loadSettingsFromStorage();
+    },
+    loadSettingsFromStorage: function() {
+      const model = localStorage.getItem('gb_model');
+      if (model) { this.model = model; }
     },
     reset: function(confirm = true) {
       let sure = true;
@@ -305,6 +334,10 @@ const app = new Vue({
       valToState['1F79'] = valueFunctionFor(2);
       valToState['1F7B'] = valueFunctionFor(3);
       valToState['1F7D'] = valueFunctionFor(4);
+      valToState['6537'] = valueFunctionFor(1);
+      valToState['6539'] = valueFunctionFor(2);
+      valToState['653B'] = valueFunctionFor(3);
+      valToState['653D'] = valueFunctionFor(4);
 
       this.reset(false);
       data.forEach(d => {

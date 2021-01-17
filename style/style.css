@@ -195,3 +195,7 @@ code {
   margin-bottom: 0;
 }
 
+.model-select label {
+  margin-right: 1rem;
+}
+
