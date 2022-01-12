@@ -54,7 +54,11 @@
             <button @click="reset">Reset to Default</button>
             <div>
               <button v-on:click="triggerIpsFileLabel" type="button">
-                <label for="ipsFileInput" ref="ipsFileLabel" v-on:click="e => e.stopPropagation()">Import an IPS Patch</label>
+                <label for="ipsFileInput" ref="ipsFileLabel" v-on:click="e => e.stopPropagation()">
+                  Import an IPS Patch
+                  <span v-if="model == 'xseries'">(v05)</span>
+                  <span v-if="model == 'edgb'">(v4)</span>
+                </label>
               </button>
               <input style="display: none" id="ipsFileInput" type="file" v-on:change="uploadIPS" accept=".ips">
             </div>
@@ -74,14 +78,14 @@
             Apply the patch to the
             <span v-if="model == 'xseries'" class='bold'>GBCSYS/GBCOS.BIN</span>
             <span v-if="model == 'edgb'" class='bold'>GBOS.GB</span>
-            file on your EverDrive. This patch will only work with the latest firmware version,
-            <span v-if="model == 'xseries'" class='bold'>v1.04!</span>
+            file on your EverDrive. This patch will only work with firmware version
+            <span v-if="model == 'xseries'" class='bold'>v1.05!</span>
             <span v-if="model == 'edgb'" class='bold'>v4!</span>
           </p>
           <p class='short-text'>
             You can download the latest firmware from
             <a v-if="model == 'xseries'" href="http://krikzz.com/pub/support/everdrive-gb/x-series/OS/">Krikzz's website</a>
-            <a v-if="model == 'edgb'" href="http://krikzz.com/pub/support/everdrive-gb/OS/v4/">Krikzz's website</a>
+            <a v-if="model == 'edgb'" href="https://krikzz.com/pub/support/everdrive-gb/original-series/OS/v4/">Krikzz's website</a>
             . I recommend using <a href="https://www.romhacking.net/patch/">ROMhacking.net's online patching tool</a> if you don't have a preferred patching method.
           </p>
           <p class='short-text'>
