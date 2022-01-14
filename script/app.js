@@ -1,14 +1,38 @@
 /*
   EverDrive GB Theme Editor
 */
-const AO = 0x22 // valAddr offset for 1.05 compared to 1.04
+
+
+// all the version and offset stuff applies only to the x-series carts
+const CV = "v5"
+const OFFSETS = {
+  v4: [
+    { id: 1, offset: 0x1F77 },
+    { id: 2, offset: 0x1F79 },
+    { id: 3, offset: 0x1F7B },
+    { id: 4, offset: 0x1F7D }
+  ],
+  v5: [
+    { id: 1, offset: 0x1F99 },
+    { id: 2, offset: 0x1F9B },
+    { id: 3, offset: 0x1F9D },
+    { id: 4, offset: 0x1F9F }
+  ]
+}
+
+const offsetByVersionId = (version, id) => {
+  return OFFSETS[version].find(obj => obj.id == id).offset;
+};
 
 const DEFAULT_PALETTES = [
-  { id: 1, label: 'Background', value: 0x0000, hex: '#000000', valAddr: 0x1F77+AO, oldValAddr: 0x6537 },
-  { id: 2, label: 'Unselected ROM, Selected Menu Entry', value: 0xE413, hex: '#21FF21', valAddr: 0x1F79+AO, oldValAddr: 0x6539 },
-  { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: 0x1F7B+AO, oldValAddr: 0x653B },
-  { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: 0x1F7D+AO, oldValAddr: 0x653D },
+  { id: 1, label: 'Background', value: 0x0000, hex: '#000000', valAddr: offsetByVersionId(CV, 1), oldValAddr: 0x6537 },
+  { id: 2, label: 'Unselected ROM, Selected Menu Entry', value: 0xE413, hex: '#21FF21', valAddr: offsetByVersionId(CV, 2), oldValAddr: 0x6539 },
+  { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: offsetByVersionId(CV, 3), oldValAddr: 0x653B },
+  { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: offsetByVersionId(CV, 4), oldValAddr: 0x653D },
 ];
+
+console.log(offsetByVersionId(CV, 1).toString(16))
+
 const IPS_HEADER = [0x50, 0x41, 0x54, 0x43, 0x48];
 const IPS_EOF = [0x45, 0x4F, 0x46];
 
@@ -331,18 +355,22 @@ const app = new Vue({
         };
       };
 
-      const addrString = (id, old) => {
-        return DEFAULT_PALETTES.find(p => p.id == id)[old ? "oldValAddr" : "valAddr"].toString(16).toUpperCase();
-      };
+      const offsetToString = (offset) => {
+        return offset.toString(16).toUpperCase();
+      }
 
-      valToState[addrString(1)] = valueFunctionFor(1);
-      valToState[addrString(2)] = valueFunctionFor(2);
-      valToState[addrString(3)] = valueFunctionFor(3);
-      valToState[addrString(4)] = valueFunctionFor(4);
-      valToState[addrString(1, true)] = valueFunctionFor(1);
-      valToState[addrString(2, true)] = valueFunctionFor(2);
-      valToState[addrString(3, true)] = valueFunctionFor(3);
-      valToState[addrString(4, true)] = valueFunctionFor(4);
+      valToState[offsetToString(offsetByVersionId("v4", 1))] = valueFunctionFor(1);
+      valToState[offsetToString(offsetByVersionId("v4", 2))] = valueFunctionFor(2);
+      valToState[offsetToString(offsetByVersionId("v4", 3))] = valueFunctionFor(3);
+      valToState[offsetToString(offsetByVersionId("v4", 4))] = valueFunctionFor(4);
+      valToState[offsetToString(offsetByVersionId("v5", 1))] = valueFunctionFor(1);
+      valToState[offsetToString(offsetByVersionId("v5", 2))] = valueFunctionFor(2);
+      valToState[offsetToString(offsetByVersionId("v5", 3))] = valueFunctionFor(3);
+      valToState[offsetToString(offsetByVersionId("v5", 4))] = valueFunctionFor(4);
+      valToState["6537"] = valueFunctionFor(1);
+      valToState["6539"] = valueFunctionFor(2);
+      valToState["653B"] = valueFunctionFor(3);
+      valToState["653D"] = valueFunctionFor(4);
 
       this.reset(false);
       data.forEach(d => {

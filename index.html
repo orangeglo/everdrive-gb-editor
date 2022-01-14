@@ -56,8 +56,6 @@
               <button v-on:click="triggerIpsFileLabel" type="button">
                 <label for="ipsFileInput" ref="ipsFileLabel" v-on:click="e => e.stopPropagation()">
                   Import an IPS Patch
-                  <span v-if="model == 'xseries'">(v05)</span>
-                  <span v-if="model == 'edgb'">(v4)</span>
                 </label>
               </button>
               <input style="display: none" id="ipsFileInput" type="file" v-on:change="uploadIPS" accept=".ips">
