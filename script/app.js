@@ -359,14 +359,14 @@ const app = new Vue({
         return offset.toString(16).toUpperCase();
       }
 
-      valToState[offsetToString(offsetByVersionId("v4", 1))] = valueFunctionFor(1);
-      valToState[offsetToString(offsetByVersionId("v4", 2))] = valueFunctionFor(2);
-      valToState[offsetToString(offsetByVersionId("v4", 3))] = valueFunctionFor(3);
-      valToState[offsetToString(offsetByVersionId("v4", 4))] = valueFunctionFor(4);
-      valToState[offsetToString(offsetByVersionId("v5", 1))] = valueFunctionFor(1);
-      valToState[offsetToString(offsetByVersionId("v5", 2))] = valueFunctionFor(2);
-      valToState[offsetToString(offsetByVersionId("v5", 3))] = valueFunctionFor(3);
-      valToState[offsetToString(offsetByVersionId("v5", 4))] = valueFunctionFor(4);
+      Object.keys(OFFSETS).sort().forEach(version => {
+        valToState[offsetToString(offsetByVersionId(version, 1))] = valueFunctionFor(1);
+        valToState[offsetToString(offsetByVersionId(version, 2))] = valueFunctionFor(2);
+        valToState[offsetToString(offsetByVersionId(version, 3))] = valueFunctionFor(3);
+        valToState[offsetToString(offsetByVersionId(version, 4))] = valueFunctionFor(4);
+      });
+
+      // old everdrive offsets
       valToState["6537"] = valueFunctionFor(1);
       valToState["6539"] = valueFunctionFor(2);
       valToState["653B"] = valueFunctionFor(3);
