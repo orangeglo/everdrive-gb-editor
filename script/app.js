@@ -4,7 +4,7 @@
 
 
 // all the version and offset stuff applies only to the x-series carts
-const CV = "v5"
+const CV = "v6"
 const OFFSETS = {
   v4: [
     { id: 1, offset: 0x1F77 },
@@ -17,6 +17,12 @@ const OFFSETS = {
     { id: 2, offset: 0x1F9B },
     { id: 3, offset: 0x1F9D },
     { id: 4, offset: 0x1F9F }
+  ],
+  v6: [
+    { id: 1, offset: 0x1FA4 },
+    { id: 2, offset: 0x1FA6 },
+    { id: 3, offset: 0x1FA8 },
+    { id: 4, offset: 0x1FAA }
   ]
 }
 
@@ -30,8 +36,6 @@ const DEFAULT_PALETTES = [
   { id: 3, label: 'Menu BG, Header/Footer BG', value: 0xEF3D, hex: '#7B7B7B', valAddr: offsetByVersionId(CV, 3), oldValAddr: 0x653B },
   { id: 4, label: 'Selected ROM, Header/Footer Text, Menu Entry', value: 0xFF7F, hex: '#FFFFFF', valAddr: offsetByVersionId(CV, 4), oldValAddr: 0x653D },
 ];
-
-console.log(offsetByVersionId(CV, 1).toString(16))
 
 const IPS_HEADER = [0x50, 0x41, 0x54, 0x43, 0x48];
 const IPS_EOF = [0x45, 0x4F, 0x46];
